@@ -13,7 +13,7 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 
-from config import BOT1_TOKEN, BOT2_TOKEN, TASK_RECEIVER_CHAT_ID
+from config import BOT1_TOKEN, BOT2_TOKEN, TASK_RECEIVER_CHAT_ID, MTPROTO_PROXY
 from database import (
     init_db, add_task, get_all_tasks, get_task_by_id, 
     update_task_status, get_tasks_by_status, assign_task, get_user_tasks,
@@ -459,9 +459,15 @@ async def main():
     init_db()
     logger.info("Database initialized")
     
-    # Create bots and dispatchers
-    bot1 = Bot(token=BOT1_TOKEN)
-    bot2 = Bot(token=BOT2_TOKEN)
+    # Build proxy URL if enabled
+    proxy_url = None
+    if MTPROTO_PROXY["enabled"]:
+        proxy_url = f"mtproto://{MTPROTO_PROXY['secret']}@{MTPROTO_PROXY['server']}:{MTPROTO_PROXY['port']}"
+        logger.info(f"MTProto proxy enabled: {MTPROTO_PROXY['server']}:{MTPROTO_PROXY['port']}")
+    
+    # Create bots and dispatchers with proxy support
+    bot1 = Bot(token=BOT1_TOKEN, proxy=proxy_url) if proxy_url else Bot(token=BOT1_TOKEN)
+    bot2 = Bot(token=BOT2_TOKEN, proxy=proxy_url) if proxy_url else Bot(token=BOT2_TOKEN)
     
     storage = MemoryStorage()
     
