@@ -11,12 +11,13 @@ BOT2_TOKEN = os.getenv("BOT2_TOKEN", "YOUR_BOT2_TOKEN_HERE")  # Task tracker bot
 ADMIN_ID = int(os.getenv("ADMIN_ID", "0")) if os.getenv("ADMIN_ID", "0").isdigit() else 0
 TASK_RECEIVER_CHAT_ID = int(os.getenv("TASK_RECEIVER_CHAT_ID", "0")) if os.getenv("TASK_RECEIVER_CHAT_ID", "0").isdigit() else 0
 
-# MTProto Proxy Configuration
-MTPROTO_PROXY = {
-    "server": os.getenv("MTPROTO_SERVER", "tgnn.live"),
-    "port": int(os.getenv("MTPROTO_PORT", "8443")),
-    "secret": os.getenv("MTPROTO_SECRET", "ee9e1dde0de02a2e7c22d10e2fff84101374676e6e2e6c697665"),
-    "enabled": os.getenv("MTPROTO_ENABLED", "True").lower() == "true"
+# SOCKS5 Proxy Configuration
+SOCKS5_PROXY = {
+    "server": os.getenv("SOCKS5_SERVER", "45.71.17.78"),
+    "port": int(os.getenv("SOCKS5_PORT", "5432")),
+    "username": os.getenv("SOCKS5_USER", "7e5zu"),
+    "password": os.getenv("SOCKS5_PASS", "eov27j2v"),
+    "enabled": os.getenv("SOCKS5_ENABLED", "True").lower() == "true"
 }
 
 # Database

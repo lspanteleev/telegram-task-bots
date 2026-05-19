@@ -13,7 +13,7 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 
-from config import BOT1_TOKEN, BOT2_TOKEN, TASK_RECEIVER_CHAT_ID, MTPROTO_PROXY
+from config import BOT1_TOKEN, BOT2_TOKEN, TASK_RECEIVER_CHAT_ID, SOCKS5_PROXY
 from database import (
     init_db, add_task, get_all_tasks, get_task_by_id, 
     update_task_status, get_tasks_by_status, assign_task, get_user_tasks,
@@ -427,9 +427,9 @@ async def main():
     
     # Build proxy URL if enabled
     proxy_url = None
-    if MTPROTO_PROXY["enabled"]:
-        proxy_url = f"mtproto://{MTPROTO_PROXY['secret']}@{MTPROTO_PROXY['server']}:{MTPROTO_PROXY['port']}"
-        logger.info(f"MTProto proxy enabled: {MTPROTO_PROXY['server']}:{MTPROTO_PROXY['port']}")
+    if SOCKS5_PROXY["enabled"]:
+        proxy_url = f"socks5://{SOCKS5_PROXY['username']}:{SOCKS5_PROXY['password']}@{SOCKS5_PROXY['server']}:{SOCKS5_PROXY['port']}"
+        logger.info(f"SOCKS5 proxy enabled: {SOCKS5_PROXY['server']}:{SOCKS5_PROXY['port']}")
     
     # Create bots and dispatchers with proxy support
     bot1 = Bot(token=BOT1_TOKEN, proxy=proxy_url) if proxy_url else Bot(token=BOT1_TOKEN)
