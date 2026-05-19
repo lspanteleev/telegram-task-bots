@@ -240,22 +240,6 @@ def register_bot2_handlers(dp: Dispatcher, bot2: Bot):
     @dp.message(Command("manage"))
     async def cmd_manage(message: types.Message):
         """Show inline buttons to manage tasks"""
-        global ADMIN_USER_ID
-        
-        # Auto-set first admin
-        if ADMIN_USER_ID is None:
-            ADMIN_USER_ID = message.from_user.id
-            logger.info(f"Admin auto-set to user {ADMIN_USER_ID} ({message.from_user.username})")
-            await message.answer(
-                f"✅ Ты назначен администратором трекера!\n"
-                f"ID: {ADMIN_USER_ID}\n"
-                f"Скопируй эту строку в .env если нужно:\n"
-                f"`ADMIN_ID={ADMIN_USER_ID}`",
-                parse_mode="Markdown"
-            )
-        elif message.from_user.id != ADMIN_USER_ID:
-            await message.answer("❌ Только администратор может управлять задачами")
-            return
         
         tasks = get_all_tasks()
         
@@ -277,11 +261,6 @@ def register_bot2_handlers(dp: Dispatcher, bot2: Bot):
     
     @dp.callback_query(F.data.startswith("task_"))
     async def process_task_callback(query: types.CallbackQuery):
-        global ADMIN_USER_ID
-        
-        if query.from_user.id != ADMIN_USER_ID:
-            await query.answer("❌ Только администратор может управлять задачами", show_alert=True)
-            return
         
         task_id = int(query.data.split("_")[1])
         task = get_task_by_id(task_id)
@@ -324,14 +303,6 @@ def register_bot2_handlers(dp: Dispatcher, bot2: Bot):
     
     @dp.callback_query(F.data.startswith("assign_"))
     async def process_assign_task(query: types.CallbackQuery):
-        global ADMIN_USER_ID
-        
-        if ADMIN_USER_ID is None:
-            ADMIN_USER_ID = query.from_user.id
-        
-        if query.from_user.id != ADMIN_USER_ID:
-            await query.answer("❌ Только администратор может управлять задачами", show_alert=True)
-            return
         
         task_id = int(query.data.split("_")[1])
         task = get_task_by_id(task_id)
@@ -382,11 +353,6 @@ def register_bot2_handlers(dp: Dispatcher, bot2: Bot):
     
     @dp.callback_query(F.data.startswith("change_status_"))
     async def process_status_change(query: types.CallbackQuery):
-        global ADMIN_USER_ID
-        
-        if query.from_user.id != ADMIN_USER_ID:
-            await query.answer("❌ Только администратор может менять статус", show_alert=True)
-            return
         
         parts = query.data.split("_")
         task_id = int(parts[2])
